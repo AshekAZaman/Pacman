@@ -1,36 +1,23 @@
-/* This program draws an animated pacman whose mouth opens
-and snaps shut, and who chases the mouse around the screen.
-
-Example for COMP 1010
-Written by J. Bate Aug 2018
-
-This example uses the float data type, which has not been covered yet.
-In this case, it simply means that fractional values like 3.56 are allowed.
-
-*****************************QUESTION 6*********************************
-Q6.(a)We can check if we have any number being divided by 0 in the code. 
-we can fix it by not dividing it by 0. Similarly we can check if we have
-a number that has a modulo operation by zero somewhere in the code. We can 
-fix it by removing and recoding it.We need to check we are not using correct 
-operators while comaparing String with another String. For example, using .equals()
-instead of ==. 
-Q6.(b) The name of the person who recorded the very first computer “bug” was Grace Murray Hopper.
+/*
+NOTE
+This program runs the game "pacman" which moves around the canvas, controlled by
+keyboard using the arrow keys for suitable directions. 
 */
 
-//The variables that control everything known about the pacman
-float pacmanX, pacmanY;         //The position of the pacman
-final int PACMAN_DIAMETER = 50; //The diameter of the pacman
-float pacmanAngle = 0.0;        //The direction the pacman is facing
-float pacmanMouth = 0.0;        //The angle that the mouth is open
+/* ---------------- THE VARIABLES THAT CONTROL EVERYTHING KNOWN ABOUT THE PACMAN ---------------- */
+float pacmanX, pacmanY;         
+final int PACMAN_DIAMETER = 50;
+float pacmanAngle = 0.0;        
+float pacmanMouth = 0.0;       
 
-/*Constants */
+/* --------------------- CONSTANTS THAT CONTROLS PACMAN'S SPEED AND MOVEMENT -------------------- */
 final int SPEED = 2;
 final int MOVERIGHT = 0;
 final int MOVEDOWN = 1;
 final int MOVELEFT = 2;
 final int MOVEUP = 3;
 
-/* ---------------- OTHER VARIABLES THAT CONTROL THE PROGRAM ---------------- */
+/* ---------------------------- OTHER VARIABLES THAT CONTROL THE GAME --------------------------- */
 int direction = 0;
 float randomColor = 0;
 float randomShape = 0;
@@ -39,10 +26,7 @@ float treatY = 0.0;
 int score = 0;
 boolean gameOver = false;
 
-/*
-* These variables defies the monster position,angle of the eyeball
-* and its size.
-*/
+/* ------- THESE VARIABLES DEFIES THE MONSTER POSITION,ANGLE OF THE EYEBALL AND ITS SIZE. ------- */
 float enemyX,enemyY;
 float eyeballAngle = 0.0;
 float xSpeed = 2;
@@ -51,11 +35,16 @@ final int ENEMY_WIDTH = PACMAN_DIAMETER + PACMAN_DIAMETER / 2;
 int counter;
 float speedAngle = 0;
 
-
-
-
-
 void moveEnemy() {
+    
+    /*
+    * OBJECTIVE 
+    * The enemy is able to move in any direction, always 
+    * at a constant speed. You can change the speed using 
+    * the variable "SPEED" above. After a regular interval
+    * the enemy moves in a random direction
+    *
+    */
     
     counter = (counter + 1) % 501;
     
@@ -80,8 +69,18 @@ void moveEnemy() {
     enemyX = (enemyX + xSpeed);
     enemyY = (enemyY + ySpeed);
     
-}
+} //moveEnemy
+
 void drawEnemy() {
+
+    /*
+    * OBJECTIVE
+    * It draws the enemy using the globals created above.
+    * The diameter of each eye (the white circles) should 
+    * be 1/3 of the width the enemy, and the diameter of each 
+    * eyeball (the black circles) should be 1/4 of the diameter of the eye.
+    *
+    */
     
     strokeWeight(4);
     fill(3, 252, 252);
@@ -106,17 +105,18 @@ void drawEnemy() {
     eyeballAngle = atan2(pacmanY - blackDiamLeftY,pacmanX - blackDiamLeftX);
     fill(0);
     ellipse(blackDiamRightX - eyeballAngle,blackDiamRightY + eyeballAngle,blackDiam,blackDiam);
-    ellipse(blackDiamLeftX - eyeballAngle,blackDiamLeftY + eyeballAngle,blackDiam,blackDiam);
+    ellipse(blackDiamLeftX - eyeballAngle,blackDiamLeftY + eyeballAngle,blackDiam,blackDiam);    
     
-    
-}
+} //drawEnemy
 
 void drawScore() {
+    
     final int MARGIN = 40;
     textSize(20);
     fill(0);
     text("Score : " + score, MARGIN, MARGIN);
-}
+    
+} //drawScore
 
 void eatTreat() {
     
@@ -156,7 +156,7 @@ void endGame() {
         textAlign(CENTER,CENTER);
         text("Game Over!",width / 2,height / 2);
     }
-}
+} //endGame
 
 
 //Sets treatX and treatY to a random value that is
@@ -182,6 +182,7 @@ void setup() {
 }
 
 void draw() {
+    
     background(128); //draw a fresh frame eachtime
     drawTreat();
     eatTreat();
@@ -196,15 +197,12 @@ void draw() {
     drawPacman();    //And draw it
     drawScore();
     drawEnemy();
-    endGame();
+    endGame();  
     
-    
-    
-    
-    
-}
+} //draw
 
 void drawPacman() {
+    
     /* Draw an arc filled with yellow to represent a "pacman".It will
     be drawn at position(pacmanX,pacmanY) with a diameter of
     PACMAN_DIAMETER.It will face in the direction
@@ -218,16 +216,19 @@ void drawPacman() {
     //Use the arc command to draw it
     arc(pacmanX, pacmanY, PACMAN_DIAMETER, PACMAN_DIAMETER,
         pacmanAngle + pacmanMouth / 2, pacmanAngle + TWO_PI - pacmanMouth / 2, PIE);
-}
+    
+} //drawPacman
 
 void animateMouth() {
+    
     //This function changes the pacmanMouth variable so that it slowly
     //increases from 0 to PACMAN_MAX_MOUTH, then snaps closed to 0 again.
     final float PACMAN_MOUTH_SPEED = 0.08;
     final float PACMAN_MAX_MOUTH = 1.5;
     //Increase the mouth opening each time, but snap it shut at the maximum
     pacmanMouth = (pacmanMouth + PACMAN_MOUTH_SPEED) % PACMAN_MAX_MOUTH;
-}
+    
+} //animateMouth
 
 //Moves Pacman in the intended direcion 
 void movePacman() {
@@ -242,11 +243,12 @@ void movePacman() {
         pacmanY = pacmanY - SPEED;
     }
     
-}
+} //movePacman
 
 //Inside this function, set the value of your global PacMan direction variable to the appropriate value
 //(0, 1, 2, or 3) if the player presses an arrow key
 void keyPressed() {
+    
     if (keyCode == UP) {
         direction = MOVEUP;
     } else if (keyCode == DOWN) {
@@ -255,10 +257,10 @@ void keyPressed() {
         direction = MOVELEFT;
     } else if (keyCode == RIGHT) {
         direction = MOVERIGHT;
-    }
+    }    
     
-    
-}
+} //keyPressed
+
 
 //Using this function Pac - Man faces the direction he is moving
 void turnPacman() {
@@ -273,7 +275,6 @@ void turnPacman() {
     }
     else if (direction == MOVEDOWN) {
         pacmanAngle = -1 * (PIE + (0.5 * PIE));
-    }
+    }    
     
-    
-}
+} //turnPacman
