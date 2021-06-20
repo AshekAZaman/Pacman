@@ -1,4 +1,20 @@
-/*
+/* This program draws an animated pacman whose mouth opens
+and snaps shut, and who chases the mouse around the screen.
+
+Example for COMP 1010
+Written by J. Bate Aug 2018
+
+This example uses the float data type, which has not been covered yet.
+In this case, it simply means that fractional values like 3.56 are allowed.
+
+*****************************QUESTION 6*********************************
+Q6.(a)We can check if we have any number being divided by 0 in the code. 
+we can fix it by not dividing it by 0. Similarly we can check if we have
+a number that has a modulo operation by zero somewhere in the code. We can 
+fix it by removing and recoding it.We need to check we are not using correct 
+operators while comaparing String with another String. For example, using .equals()
+instead of ==. 
+Q6.(b) The name of the person who recorded the very first computer “bug” was Grace Murray Hopper.
 */
 
 //The variables that control everything known about the pacman
@@ -7,39 +23,38 @@ final int PACMAN_DIAMETER = 50; //The diameter of the pacman
 float pacmanAngle = 0.0;        //The direction the pacman is facing
 float pacmanMouth = 0.0;        //The angle that the mouth is open
 
-/*Constants*/
-final int SPEED = 2;//constant speed for the pacman
-//Constants for direction
+/*Constants */
+final int SPEED = 2;
 final int MOVERIGHT = 0;
 final int MOVEDOWN = 1;
 final int MOVELEFT = 2;
 final int MOVEUP = 3;
-//Constants for Enemy
-final int ENEMY_WIDTH = PACMAN_DIAMETER + PACMAN_DIAMETER / 2;
 
-
-
-/*Variables*/
+/* ---------------- OTHER VARIABLES THAT CONTROL THE PROGRAM ---------------- */
 int direction = 0;
 float randomColor = 0;
 float randomShape = 0;
 float treatX = 0.0;
 float treatY = 0.0;
 int score = 0;
+boolean gameOver = false;
 
-//Variables for Enemy
+/*
+* These variables defies the monster position,angle of the eyeball
+* and its size.
+*/
 float enemyX,enemyY;
 float eyeballAngle = 0.0;
 float xSpeed = 2;
 float ySpeed = 0;
+final int ENEMY_WIDTH = PACMAN_DIAMETER + PACMAN_DIAMETER / 2;
 int counter;
 float speedAngle = 0;
-boolean gameOver = false;
 
 
 
 
- 
+
 void moveEnemy() {
     
     counter = (counter + 1) % 501;
@@ -70,23 +85,18 @@ void drawEnemy() {
     
     strokeWeight(4);
     fill(3, 252, 252);
-    square(enemyX,enemyY,ENEMY_WIDTH);
+    square(enemyX,enemyY,enemyWidth);    
     
-    //eye
-    int whiteDiam = ENEMY_WIDTH / 3;
-    
-    
+    int whiteDiam = enemyWidth / 3;    
     float whiteDiamLeftX = enemyX + whiteDiam / 1.5;
     float whiteDiamLeftY = enemyY + whiteDiam / 1.5;
     float whiteDiamRightX = enemyX + 2.2 * whiteDiam;
-    float whiteDiamRightY = whiteDiamLeftY;
-    
-    
+    float whiteDiamRightY = whiteDiamLeftY;   
     
     fill(255,255,255);
     ellipse(whiteDiamLeftX,whiteDiamLeftY,whiteDiam,whiteDiam);
     ellipse(whiteDiamRightX,whiteDiamRightY,whiteDiam,whiteDiam);
-    //eyeball
+    
     eyeballAngle = atan2(pacmanY - 2 * enemyY,pacmanX - 2 * enemyX);
     int blackDiam = whiteDiam / 4;
     float blackDiamLeftX = whiteDiamLeftX;
@@ -102,7 +112,7 @@ void drawEnemy() {
 }
 
 void drawScore() {
-    final int MARGIN = 30;
+    final int MARGIN = 40;
     textSize(20);
     fill(0);
     text("Score : " + score, MARGIN, MARGIN);
@@ -114,8 +124,7 @@ void eatTreat() {
     if (distance < PACMAN_DIAMETER / 2) {
         generateTreat();
         score++;
-    }
-    
+    }  
     
 } //eatTreat
 
@@ -136,13 +145,14 @@ void drawTreat() {
 
 void endGame() {
     
-    float distance = sqrt(sq(pacmanX - (enemyX + ENEMY_WIDTH / 2)) + sq(pacmanY - (enemyY + ENEMY_WIDTH / 2)));
-    boolean condition = distance <((PACMAN_DIAMETER / 2) + (ENEMY_WIDTH / 2));    
+    float distance = sqrt(sq(pacmanX - (enemyX + enemyWidth / 2)) + sq(pacmanY - (enemyY + enemyWidth / 2)));
+    boolean condition = distance <((PACMAN_DIAMETER / 2) + (enemyWidth / 2));
+    boolean edgeCondition = (pacmanX + (PACMAN_DIAMETER / 2)>width) || (pacmanX - (PACMAN_DIAMETER / 2)<0) || (pacmanY + (PACMAN_DIAMETER / 2)>height) || (pacmanY - (PACMAN_DIAMETER / 2)<0); 
     
-    if (condition) {
+    if (condition || edgeCondition) {        
         gameOver = true;
         fill(0);
-        textSize(100);
+        textSize(89);
         textAlign(CENTER,CENTER);
         text("Game Over!",width / 2,height / 2);
     }
@@ -161,29 +171,37 @@ void generateTreat() {
 } //generateTreat
 
 void setup() {
+    
     size(500,500);
     pacmanX = width / 2;  //Start the pacman in the
     pacmanY = height / 2; //centre of the canvas
     enemyX = (width / 2) - (width / 3);
     enemyY = (height / 2) - (height / 4);    
-    generateTreat();    
+    generateTreat();
+    
 }
-
 
 void draw() {
     background(128); //draw a fresh frame eachtime
     drawTreat();
     eatTreat();
+    
     if (gameOver == false) {
         movePacman();    //Move the pacman toward the mouse
         moveEnemy();
         turnPacman();    //Turn it to face the mouse
         animateMouth();  //Make the mouth open and close        
     }
+    
     drawPacman();    //And draw it
     drawScore();
     drawEnemy();
-    endGame();    
+    endGame();
+    
+    
+    
+    
+    
 }
 
 void drawPacman() {
@@ -191,20 +209,20 @@ void drawPacman() {
     be drawn at position(pacmanX,pacmanY) with a diameter of
     PACMAN_DIAMETER.It will face in the direction
     given by pacmanAngle, and the mouth will be open atan angle of
-    pacmanMouth.Thisangle will increase by PACMAN_MOUTH_SPEED radians each
+    pacmanMouth.This angle will increase by PACMAN_MOUTH_SPEED radians each
     frame, until it reaches PACMAN_MAX_MOUTH, and snapsshut.
     */  
-    fill(255,255,0);//yellow pacman
-    stroke(0);  //with a black outline
+    fill(255,255,0); //yellow pacman
+    stroke(0);       //with a black outline
     strokeWeight(2); //that's a little thicker
     //Use the arc command to draw it
-    arc(pacmanX,pacmanY, PACMAN_DIAMETER, PACMAN_DIAMETER,
+    arc(pacmanX, pacmanY, PACMAN_DIAMETER, PACMAN_DIAMETER,
         pacmanAngle + pacmanMouth / 2, pacmanAngle + TWO_PI - pacmanMouth / 2, PIE);
 }
 
 void animateMouth() {
     //This function changes the pacmanMouth variable so that it slowly
-    //increases from0 to PACMAN_MAX_MOUTH, then snaps closed to 0 again.
+    //increases from 0 to PACMAN_MAX_MOUTH, then snaps closed to 0 again.
     final float PACMAN_MOUTH_SPEED = 0.08;
     final float PACMAN_MAX_MOUTH = 1.5;
     //Increase the mouth opening each time, but snap it shut at the maximum
@@ -212,7 +230,8 @@ void animateMouth() {
 }
 
 //Moves Pacman in the intended direcion 
-void movePacman() {    
+void movePacman() {
+    
     if (direction == MOVERIGHT) {
         pacmanX = pacmanX + SPEED;
     } else if (direction == MOVEDOWN) {
@@ -222,6 +241,7 @@ void movePacman() {
     } else if (direction == MOVEUP) {
         pacmanY = pacmanY - SPEED;
     }
+    
 }
 
 //Inside this function, set the value of your global PacMan direction variable to the appropriate value
