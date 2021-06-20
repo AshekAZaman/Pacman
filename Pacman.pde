@@ -87,9 +87,9 @@ void drawEnemy() {
     
     strokeWeight(4);
     fill(3, 252, 252);
-    square(enemyX,enemyY,enemyWidth);    
+    square(enemyX,enemyY,ENEMY_WIDTH);    
     
-    int whiteDiam = enemyWidth / 3;    
+    int whiteDiam = ENEMY_WIDTH / 3;    
     float whiteDiamLeftX = enemyX + whiteDiam / 1.5;
     float whiteDiamLeftY = enemyY + whiteDiam / 1.5;
     float whiteDiamRightX = enemyX + 2.2 * whiteDiam;
@@ -182,8 +182,8 @@ void endGame() {
     *
     */
     
-    float distance = sqrt(sq(pacmanX - (enemyX + enemyWidth / 2)) + sq(pacmanY - (enemyY + enemyWidth / 2)));
-    boolean condition = distance <((PACMAN_DIAMETER / 2) + (enemyWidth / 2));
+    float distance = sqrt(sq(pacmanX - (enemyX + ENEMY_WIDTH / 2)) + sq(pacmanY - (enemyY + ENEMY_WIDTH / 2)));
+    boolean condition = distance <((PACMAN_DIAMETER / 2) + (ENEMY_WIDTH / 2));
     boolean edgeCondition = (pacmanX + (PACMAN_DIAMETER / 2)>width) || (pacmanX - (PACMAN_DIAMETER / 2)<0) || (pacmanY + (PACMAN_DIAMETER / 2)>height) || (pacmanY - (PACMAN_DIAMETER / 2)<0); 
     
     if (condition || edgeCondition) {        
