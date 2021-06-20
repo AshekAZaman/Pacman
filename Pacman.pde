@@ -1,7 +1,10 @@
 /*
-NOTE
-This program runs the game "pacman" which moves around the canvas, controlled by
-keyboard using the arrow keys for suitable directions. 
+* ABOUT Pacman
+* This program runs the game "pacman" which moves around the canvas, controlled by
+* keyboard using the arrow keys for suitable directions. Once the pacman touches
+* the edge of the canvas or the enemy the game is over. 
+* Learn more about the game at https://en.wikipedia.org/wiki/Pac-Man
+*
 */
 
 /* ---------------- THE VARIABLES THAT CONTROL EVERYTHING KNOWN ABOUT THE PACMAN ---------------- */
@@ -38,14 +41,14 @@ float speedAngle = 0;
 void moveEnemy() {
     
     /*
-    * OBJECTIVE 
+    * OBJECTIVE moveEnemy()
     * The enemy is able to move in any direction, always 
     * at a constant speed. You can change the speed using 
     * the variable "SPEED" above. After a regular interval
     * the enemy moves in a random direction
     *
     */
-    
+
     counter = (counter + 1) % 501;
     
     if (counter ==  500) {
@@ -74,7 +77,7 @@ void moveEnemy() {
 void drawEnemy() {
 
     /*
-    * OBJECTIVE
+    * OBJECTIVE drawEnemy()
     * It draws the enemy using the globals created above.
     * The diameter of each eye (the white circles) should 
     * be 1/3 of the width the enemy, and the diameter of each 
@@ -110,6 +113,12 @@ void drawEnemy() {
 } //drawEnemy
 
 void drawScore() {
+
+    /*
+    * OBJECTIVE drawScore()
+    * It draws score in the canvas.
+    *
+    */
     
     final int MARGIN = 40;
     textSize(20);
@@ -119,6 +128,17 @@ void drawScore() {
 } //drawScore
 
 void eatTreat() {
+
+    /*
+    * OBJECTIVE eatTreat()
+    * This function calculate the distance between the centre 
+    * of Pac-Man and the centre of the treat.
+    * If this distance is less than the radius of PacMan,
+    * we will consider Pac-Man to have “eaten” the treat.
+    * When Pac-Man has “eaten” the treat, make the treat
+    * reappear in a new random location.
+    *
+    */
     
     float distance = sqrt(sq(pacmanX - treatX) + sq(pacmanY - treatY));
     if (distance < PACMAN_DIAMETER / 2) {
@@ -130,6 +150,15 @@ void eatTreat() {
 
 // Draw a treat roughly centred at the treat’s x and y coordinates
 void drawTreat() {
+
+    /*
+    * OBJECTIVE drawTreat() 
+    * This draws a treat roughly centred at the treat’s x
+    * and y coordinates. It is aimed to draw a treat that is 
+    * roughly half the size of Pac-Man.
+    *
+    */
+
     fill(randomColor);  
     if ((int)randomShape == 0) {
         circle(treatX, treatY, PACMAN_DIAMETER / 2);
@@ -144,6 +173,14 @@ void drawTreat() {
 
 
 void endGame() {
+
+    /*
+    * OBJECTIVE endGame()
+    * This function is called when Pac-Man touches the enemy or edge of
+    * the canvas. This function should set gameOver to true, and print a 
+    * “Game Over!” message.
+    *
+    */
     
     float distance = sqrt(sq(pacmanX - (enemyX + enemyWidth / 2)) + sq(pacmanY - (enemyY + enemyWidth / 2)));
     boolean condition = distance <((PACMAN_DIAMETER / 2) + (enemyWidth / 2));
@@ -159,10 +196,16 @@ void endGame() {
 } //endGame
 
 
-//Sets treatX and treatY to a random value that is
-//never closer than PACMAN_DIAMETER pixels to any edge of the canvas.
 void generateTreat() {
     
+    /*
+    * OBJECTIVE generateTreat()
+    * This function sets each of treatX and treatY global variables 
+    * to a random value that is never closer than PACMAN_DIAMETER pixels 
+    * to any edge of the canvas
+    *
+    */
+
     treatX = random(0 + PACMAN_DIAMETER,width - PACMAN_DIAMETER);
     treatY = random(0 + PACMAN_DIAMETER,height - PACMAN_DIAMETER);
     randomShape = random(0,3);
@@ -171,6 +214,14 @@ void generateTreat() {
 } //generateTreat
 
 void setup() {
+
+    /*
+    * OBJECTIVE setup()
+    * This function sets up the canvas, the coordinates of 
+    * the pacman and the enemy and the position of the first 
+    * treat 
+    *
+    */
     
     size(500,500);
     pacmanX = width / 2;  //Start the pacman in the
@@ -182,6 +233,12 @@ void setup() {
 }
 
 void draw() {
+
+    /*
+    * OBJECTIVE draw()
+    * This function runs all the functions
+    *
+    */
     
     background(128); //draw a fresh frame eachtime
     drawTreat();
@@ -203,13 +260,17 @@ void draw() {
 
 void drawPacman() {
     
-    /* Draw an arc filled with yellow to represent a "pacman".It will
-    be drawn at position(pacmanX,pacmanY) with a diameter of
-    PACMAN_DIAMETER.It will face in the direction
-    given by pacmanAngle, and the mouth will be open atan angle of
-    pacmanMouth.This angle will increase by PACMAN_MOUTH_SPEED radians each
-    frame, until it reaches PACMAN_MAX_MOUTH, and snapsshut.
+    /*
+    * OBJECTIVE drawPacman()
+    * Draw an arc filled with yellow to represent a "pacman".It will
+    * be drawn at position(pacmanX,pacmanY) with a diameter of
+    * PACMAN_DIAMETER.It will face in the direction
+    * given by pacmanAngle, and the mouth will be open atan angle of
+    * pacmanMouth.This angle will increase by PACMAN_MOUTH_SPEED radians each
+    * frame, until it reaches PACMAN_MAX_MOUTH, and snapsshut.
+    *
     */  
+
     fill(255,255,0); //yellow pacman
     stroke(0);       //with a black outline
     strokeWeight(2); //that's a little thicker
@@ -221,6 +282,13 @@ void drawPacman() {
 
 void animateMouth() {
     
+    /*
+    * OBJECTIVE animateMouth()
+    * This function provides the mouth
+    * of the pacman movements
+    *
+    */
+
     //This function changes the pacmanMouth variable so that it slowly
     //increases from 0 to PACMAN_MAX_MOUTH, then snaps closed to 0 again.
     final float PACMAN_MOUTH_SPEED = 0.08;
@@ -230,9 +298,21 @@ void animateMouth() {
     
 } //animateMouth
 
-//Moves Pacman in the intended direcion 
+
 void movePacman() {
     
+    /*
+    * OBJECTIVE movePacman()
+    * This function provides the mouth
+    * of the pacman movements.
+    * Global integer variables are defined to store which direction Pac-Man is moving in.
+    *    • If this variable is 0, Pac-Man should move to the right.
+    *    • If this variable is 1, Pac-Man should move straight down.
+    *    • If this variable is 2, Pac-Man should move to the left.
+    *    • If this variable is 3, Pac-Man should move straight up.
+    *
+    */
+
     if (direction == MOVERIGHT) {
         pacmanX = pacmanX + SPEED;
     } else if (direction == MOVEDOWN) {
@@ -245,9 +325,15 @@ void movePacman() {
     
 } //movePacman
 
-//Inside this function, set the value of your global PacMan direction variable to the appropriate value
-//(0, 1, 2, or 3) if the player presses an arrow key
 void keyPressed() {
+
+    /*
+    * OBJECTIVE keyPressed()
+    * Inside this function, set the value of your global PacMan
+    * direction variable to the appropriate value
+    * (0, 1, 2, or 3) if the player presses an arrow key
+    *
+    */
     
     if (keyCode == UP) {
         direction = MOVEUP;
@@ -261,10 +347,13 @@ void keyPressed() {
     
 } //keyPressed
 
-
-//Using this function Pac - Man faces the direction he is moving
 void turnPacman() {
-    //Set the pacmanAngle variable to be the angle from the pacman to the mouse
+    
+    /*
+    * OBJECTIVE turnPacman()
+    * Using this function Pac - Man faces the direction he is moving
+    *
+    */
     
     if (direction == MOVERIGHT) {
         pacmanAngle = 0;
